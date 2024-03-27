@@ -1,0 +1,6 @@
+[submodule "buildroot"]
+	path = buildroot
+	url = git://git.buildroot.net/buildroot
+[submodule "linux-rpi"]
+	path = linux-rpi
+	url = git@github.com:raspberrypi/linux.git
