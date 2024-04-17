@@ -7,6 +7,8 @@
 kernel=Image
 #kernel=u-boot.bin
 
+armstub=bl31.bin
+
 # To use an external initramfs file
 #initramfs rootfs.cpio.gz
 
@@ -23,4 +25,4 @@ gpu_mem_1024=100
 dtoverlay=vc4-kms-v3d-pi5
 dtoverlay=imx219
 #dtoverlay=ov5647
-dtparam=uart0_console
+#dtparam=uart0_console
