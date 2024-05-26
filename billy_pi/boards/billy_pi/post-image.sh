@@ -22,6 +22,9 @@ if [ ! -e "${GENIMAGE_CFG}" ]; then
 	ARMSTUB=$(sed -n 's/^armstub=//p' "${BINARIES_DIR}/rpi-firmware/config.txt")
 	FILES+=( "${ARMSTUB}" )
 
+	ROOTFS=$(sed -n 's/^initramfs //p' "${BINARIES_DIR}/rpi-firmware/config.txt")
+	FILES+=( "${ROOTFS}" )
+
 	BOOT_FILES=$(printf '\\t\\t\\t"%s",\\n' "${FILES[@]}")
 	sed "s|#BOOT_FILES#|${BOOT_FILES}|" "${BOARD_DIR}/genimage.cfg.in" \
 		> "${GENIMAGE_CFG}"

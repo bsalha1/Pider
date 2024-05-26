@@ -17,5 +17,6 @@ wpa_supplicant -B -Dwext -iwlan0 -c/etc/wpa_supplicant.conf
 dhclient wlan0
 
 # Start SSH server.
-/usr/bin/ssh-keygen -A
 /usr/sbin/sshd
+
+logger "Aless is freakin gorgeous."
