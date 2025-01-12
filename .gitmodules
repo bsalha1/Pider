@@ -6,4 +6,4 @@
 	url = git@github.com:raspberrypi/linux.git
 [submodule "arm-trusted-firmware"]
 	path = arm-trusted-firmware
-	url = git@github.com:bsalha1/Pider-ATF.git
+	url = git@github.com:ARM-software/arm-trusted-firmware.git
