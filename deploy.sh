@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 RED='\033[0;31m'
 LIGHT_BLUE='\033[1;34'm
 NC='\033[0m'

@@ -25,18 +25,17 @@ null::sysinit:/bin/ln -sf /proc/self/fd/0 /dev/stdin
 null::sysinit:/bin/ln -sf /proc/self/fd/1 /dev/stdout
 null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 ::sysinit:/bin/hostname -F /etc/hostname
-# now run any rc scripts
-# ::sysinit:/etc/init.d/rcS
-::sysinit:/bin/sh /bin/init.sh
 
-# Put a getty on the serial port
-console::respawn:/sbin/getty -L  console 0 vt100 # GENERIC_SERIAL
-tty1::respawn:/sbin/getty -L  tty1 0 vt100 # HDMI console
+# Initialize logging.
+::sysinit:/sbin/syslogd
 
-# Stuff to do for the 3-finger salute
-#::ctrlaltdel:/sbin/reboot
+# Call init.
+::sysinit:/bin/sh /bin/init.sh 2>&1 >/dev/null | logger -t init
+
+# Put getty on serial and HDMI
+console::respawn:/sbin/getty -L console 0 vt100
+tty1::respawn:/sbin/getty -L  tty1 0 vt100
 
 # Stuff to do before rebooting
-::shutdown:/etc/init.d/rcK
 ::shutdown:/sbin/swapoff -a
 ::shutdown:/bin/umount -a -r
