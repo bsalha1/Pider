@@ -5,7 +5,7 @@
 ################################################################################
 
 DIDACT_VERSION = 1.0
-DIDACT_SITE = $(BR2_EXTERNAL_BILLY_PI_PATH)/package/didact/src
+DIDACT_SITE = $(BR2_EXTERNAL_PIDER_PATH)/package/didact/src
 DIDACT_SITE_METHOD = local
 
 define DIDACT_BUILD_CMDS

@@ -2,20 +2,25 @@
 
 set -e
 
-RED='\033[0;31m'
 LIGHT_BLUE='\033[1;34'm
 NC='\033[0m'
 
 usage()
 {
-    echo "usage: $0 [-r]
+    echo "usage: $0 [rpi ip addr] [-r]
     -r: reboot after updating the SD card."
 }
 
 # Parse arguments, if any.
+if [ $# -lt 1 ]; then
+    usage
+    exit 1
+fi
+
+ip="$1"
 reboot=false
-if [ $# -gt 0 ]; then
-    if [ "$1" = "-r" ]; then
+if [ $# -gt 1 ]; then
+    if [ "$2" = "-r" ]; then
         reboot=true
     else
         usage
@@ -24,7 +29,7 @@ if [ $# -gt 0 ]; then
 fi
 
 echo -e "${LIGHT_BLUE}Copying image to rpi${NC}..."
-scp buildroot/output/images/sdcard.img root@bilal-rpi:/tmp
+scp buildroot/output/images/sdcard.img "root@$ip:/tmp"
 
 cmd=
 if $reboot; then
@@ -34,4 +39,4 @@ else
 fi
 
 echo -e "${LIGHT_BLUE}Writing image to rpi${NC}..."
-ssh root@bilal-rpi -t "$cmd"
+ssh "root@$ip" -t "$cmd"

@@ -1,6 +1,0 @@
-menu "Billy Packages"
-    source "$BR2_EXTERNAL_BILLY_PI_PATH/package/didact/Config.in"
-    source "$BR2_EXTERNAL_BILLY_PI_PATH/package/libcamera-rpi/Config.in"
-    source "$BR2_EXTERNAL_BILLY_PI_PATH/package/libcamera-rpi-apps/Config.in"
-    source "$BR2_EXTERNAL_BILLY_PI_PATH/package/libpisp/Config.in"
-endmenu

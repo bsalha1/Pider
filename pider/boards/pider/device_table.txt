@@ -10,15 +10,5 @@
 /tmp					d	1777	0	0	-	-	-	-	-
 /etc					d	755	0	0	-	-	-	-	-
 /root					d	700	0	0	-	-	-	-	-
-/var/www				d	755	33	33	-	-	-	-	-
 /etc/shadow				f	600	0	0	-	-	-	-	-
 /etc/passwd				f	644	0	0	-	-	-	-	-
-/etc/network/if-up.d			d	755	0	0	-	-	-	-	-
-/etc/network/if-pre-up.d		d	755	0	0	-	-	-	-	-
-/etc/network/if-down.d			d	755	0	0	-	-	-	-	-
-/etc/network/if-post-down.d		d	755	0	0	-	-	-	-	-
-# SSH keys must only be readable and writable by root.
-/etc/ssh/ssh_host_ecdsa_key		f	600	0	0	-	-	-	-	-
-/etc/ssh/ssh_host_ecdsa_key.pub	f	600	0	0	-	-	-	-	-
-# uncomment this to allow starting x as non-root
-#/usr/X11R6/bin/Xfbdev		     	f	4755	0	0	-	-	-	-	-

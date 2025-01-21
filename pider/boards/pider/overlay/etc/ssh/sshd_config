@@ -1,0 +1,13 @@
+# Allow root login - it is the only user after all.
+PermitRootLogin yes
+
+# Only allow users with private keys matching these public keys to log in.
+AuthorizedKeysFile .ssh/authorized_keys
+
+# Do not allow password authentication - use asymmetric cryptography instead.
+PasswordAuthentication no
+
+# Allow SCP.
+Subsystem sftp /usr/libexec/sftp-server
+
+LogLevel VERBOSE
