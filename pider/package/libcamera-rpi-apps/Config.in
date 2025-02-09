@@ -14,6 +14,7 @@ config BR2_PACKAGE_LIBCAMERA_RPI_APPS
 	select BR2_PACKAGE_LIBEXIF
 	select BR2_PACKAGE_LIBPNG
 	select BR2_PACKAGE_TIFF
+	select BR2_PACKAGE_LIBDRM
 	help
 	  This is a small suite of libcamera-based apps that aim to copy
 	  the functionality of the existing "raspicam" apps.

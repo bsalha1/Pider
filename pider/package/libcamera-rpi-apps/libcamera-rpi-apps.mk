@@ -18,13 +18,14 @@ LIBCAMERA_RPI_APPS_DEPENDENCIES = \
 	libcamera-rpi \
 	libexif \
 	libpng \
-	tiff
+	tiff \
+	libdrm
 
 LIBCAMERA_RPI_APPS_CONF_OPTS = \
 	-Denable_opencv=disabled \
 	-Denable_tflite=disabled \
-	-Denable_drm=disabled \
-	-Denable_libav=disabled \
+	-Denable_drm=enabled \
+	-Denable_libav=enabled \
 	-Denable_egl=disabled \
 	-Denable_qt=disabled
 

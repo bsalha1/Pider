@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juni Stream</title>
+    <link href="https://vjs.zencdn.net/8.0.4/video-js.css" rel="stylesheet" />
+<style>
+</style>
 </head>
 <body>
+    <video id="stream-vid" class="video-js" width="800" height="450" controls>
+        <source src="stream_0.m3u8" type="application/x-mpegURL">
+    </video>
+
+    <script src="https://vjs.zencdn.net/8.0.4/video.min.js"></script>
+
+    <script>
+        videojs('stream-vid', {
+            autoplay: 'play',
+            fluid: true
+        });
+    </script>
 </body>
 </html>
