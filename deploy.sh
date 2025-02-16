@@ -33,10 +33,10 @@ scp buildroot/output/images/sdcard.img "root@$ip:/tmp"
 
 cmd=
 if $reboot; then
-    cmd="dd if=/tmp/sdcard.img of=/dev/mmcblk0 bs=4M conv=fsync && reboot"
+    cmd="dd if=/tmp/sdcard.img of=/dev/mmcblk0 bs=4M conv=fsync && reboot -f"
 else
     cmd="dd if=/tmp/sdcard.img of=/dev/mmcblk0 bs=4M conv=fsync"
 fi
 
 echo -e "${LIGHT_BLUE}Writing image to rpi${NC}..."
-ssh "root@$ip" -t "$cmd"
+ssh "root@$ip" "$cmd"

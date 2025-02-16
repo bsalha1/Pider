@@ -1,6 +1,6 @@
 menu "Pider Packages"
-    source "$BR2_EXTERNAL_PIDER_PATH/package/didact/Config.in"
     source "$BR2_EXTERNAL_PIDER_PATH/package/libcamera-rpi/Config.in"
     source "$BR2_EXTERNAL_PIDER_PATH/package/libcamera-rpi-apps/Config.in"
     source "$BR2_EXTERNAL_PIDER_PATH/package/libpisp/Config.in"
+    source "$BR2_EXTERNAL_PIDER_PATH/package/pider-init/Config.in"
 endmenu
