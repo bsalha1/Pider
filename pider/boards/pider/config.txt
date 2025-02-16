@@ -16,6 +16,9 @@ display_auto_detect=1
 # Enable DRM VC4 V3D driver
 dtoverlay=vc4-kms-v3d-pi5
 
+# Disable Bluetooth to save some power.
+dtoverlay=disable-bt-pi5
+
 # Blink as heartbeat.
 dtparam=act_led_trigger=heartbeat
 

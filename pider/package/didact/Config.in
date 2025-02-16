@@ -1,4 +1,0 @@
-config BR2_PACKAGE_DIDACT
-    bool "didact"
-    help
-        Didact is a super cool guy who will answer any question you have.

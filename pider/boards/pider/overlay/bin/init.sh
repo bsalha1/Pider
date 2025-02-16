@@ -36,6 +36,10 @@ setup_network()
 
 setup_ssh_server()
 {
+    # Mount pseudo terminal filesystem - rw by root, w by tty group, inaccessible for anyone else.
+    mkdir /dev/pts
+    mount -t devpts devpts /dev/pts -o gid=5,mode=620
+
     # Generate some host keys.
     ssh-keygen -A
 
@@ -45,7 +49,16 @@ setup_ssh_server()
 
 setup_https_server()
 {
-    # Start HTTP server.
+    # Set up FastCGI for commands to the backend. Keep socket up to date with /etc/nginx.conf.
+    fcgiwrap -s unix:/var/run/fcgiwrap.socket &
+
+    # Allow nginx worker processes to access the socket.
+    until [ -e /var/run/fcgiwrap.socket ]; do
+        usleep 100000
+    done
+    chown www-data /var/run/fcgiwrap.socket
+
+    # Start HTTPS server.
     mkdir /var/log/nginx
     nginx
 }
@@ -60,13 +73,10 @@ setup_livestream()
     # Auto White Balance and Auto Focus.
     #
     # The soft-realtime back end reads images from DRAM, splitting them into tiles.
-    libcamera-vid -t 0 --inline -n --width 1280 --height 720 --framerate 30 --codec h264 --libav-format mpegts -o - \
-        | ffmpeg -i - -c:v copy -f hls -hls_time 2 -hls_list_size 5 -hls_flags delete_segments -hls_allow_cache 0 /usr/html/stream_%v.m3u8
+    libcamera-vid -t 0 --inline -n --width 1280 --height 720 --bitrate 3145728 --framerate 30 --codec h264 --libav-format mpegts -o - \
+        | ffmpeg -i - -r 30 -c:v copy -f hls -hls_time 2 -hls_list_size 5 -hls_flags independent_segments+delete_segments -hls_allow_cache 0 /usr/html/stream_%v.m3u8
+
 }
-
-echo "initializing pider"
-
-mount -t debugfs none /sys/kernel/debug
 
 setup_firewall
 

@@ -1,0 +1,4 @@
+config BR2_PACKAGE_PIDER_INIT
+	bool "pider-init"
+	help
+	  Entry point for Pider runtime.

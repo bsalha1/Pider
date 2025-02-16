@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        table, td {
+            border:1px solid black;
+        }
+    </style>
 <head>
     <title>Juni Stream</title>
     <link href="https://vjs.zencdn.net/8.0.4/video-js.css" rel="stylesheet" />
@@ -7,17 +12,50 @@
 </style>
 </head>
 <body>
-    <video id="stream-vid" class="video-js" width="800" height="450" controls>
+    <h2>Juni Stream</h2>
+
+    <video id="stream-vid" class="video-js" controls>
         <source src="stream_0.m3u8" type="application/x-mpegURL">
     </video>
 
     <script src="https://vjs.zencdn.net/8.0.4/video.min.js"></script>
 
     <script>
-        videojs('stream-vid', {
-            autoplay: 'play',
+        videojs("stream-vid", {
+            autoplay: "play",
             fluid: true
         });
     </script>
+
+    <script>
+        // Gets CPU temperature from sysfs, replacing the element with the cpu_temp ID with the
+        // temperature in Celsius to a precision of 2 decimal places.
+        function getSystemStatus() {
+            fetch("/cgi-bin/get_system_status.sh")
+                .then(response => response.text())
+                .then(data => {
+                    const lines = data.split("\n");
+                    document.getElementById("cpu_temp").textContent = (parseFloat(lines[0]) / 1000).toFixed(2) + " C";
+                    document.getElementById("uptime").textContent = lines[1];
+                })
+                .catch(error => console.error("error fetching temperature:", error));
+        }
+
+        // Update the CPU temperature every second.
+        setInterval(getSystemStatus, 1000);
+    </script>
+
+    <h2>System Status</h2>
+
+    <table style="width:50%">
+        <tr>
+            <td>cpu temperature</td>
+            <td id="cpu_temp">loading...</td>
+        </tr>
+        <tr>
+            <td>uptime</td>
+            <td id="uptime">loading...</td>
+        </tr>
+    </table>
 </body>
 </html>
