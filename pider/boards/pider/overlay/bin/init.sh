@@ -50,6 +50,7 @@ setup_ssh_server()
 setup_https_server()
 {
     # Set up FastCGI for commands to the backend. Keep socket up to date with /etc/nginx.conf.
+    mkdir -p /var/run
     fcgiwrap -s unix:/var/run/fcgiwrap.socket &
 
     # Allow nginx worker processes to access the socket.
@@ -59,7 +60,8 @@ setup_https_server()
     chown www-data /var/run/fcgiwrap.socket
 
     # Start HTTPS server.
-    mkdir /var/log/nginx
+    mkdir -p /var/log/nginx
+    mkdir -p /var/cache/nginx
     nginx
 }
 
@@ -73,8 +75,8 @@ setup_livestream()
     # Auto White Balance and Auto Focus.
     #
     # The soft-realtime back end reads images from DRAM, splitting them into tiles.
-    libcamera-vid -t 0 --inline -n --width 1280 --height 720 --bitrate 3145728 --framerate 30 --codec h264 --libav-format mpegts -o - \
-        | ffmpeg -i - -r 30 -c:v copy -f hls -hls_time 2 -hls_list_size 5 -hls_flags independent_segments+delete_segments -hls_allow_cache 0 /usr/html/stream_%v.m3u8
+    libcamera-vid -t 0 --inline -n --width 1920 --height 1080 --bitrate 12000000 --framerate 60 --codec h264 --libav-format mpegts -o - \
+        | ffmpeg -i - -r 60 -c:v copy -f hls -hls_time 1 -hls_list_size 1 -hls_flags independent_segments+delete_segments -hls_allow_cache 0 /usr/html/stream_%v.m3u8
 
 }
 
