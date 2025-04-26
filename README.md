@@ -20,15 +20,12 @@ It is a minimalistic platform based on buildroot which contains a plethora of op
 The ultimate goal of this task is to host an HTTPS server on the device which streams surveillance footage from an IMX708 image sensor. This is so I can make sure my dog Juniper doesn't die while I'm gone. Maybe I will add some post-processing to detect movement or other useful phenomena.
 
 ## Boot
-After Linux is finished booting, BusyBox init is invoked which executes processes per [inittab](pider/boards/pider/overlay/etc/inittab). This mounts the typically-useful filesystems and make some typically-used directories and ultimately invokes a shell script called [init.sh](pider/boards/pider/overlay/bin/init.sh). This script is used to do our specific configurations of the system and kick off all the processes that will run (unless a user tunnels in). Those consist of:
-1. Mount kernel debugfs.
-2. Set up firewall.
-3. Get an IP address for the Wi-Fi and Ethernet interfaces from a discovered DHCP server.
-4. Start SSH server.
-5. Start HTTPS server.
+After Linux is finished booting, [pider-init](pider/package/pider-init/src/init.cc) is invoked. The goal of pider-init is to do the bare minimum initialization and to execute the initialization script. This involves mounting procfs and sysfs, setting the hostname, starting the system logger, putting a login on the UART port and then finally executing the [init.sh](pider/boards/pider/overlay/bin/init.sh) script.
+
+This script sets up the firewall which only lets in TCP packets destined to ports 22 (SSH), 80 (HTTP) and 443 (HTTPS) - this is configured in [nftables.conf](pider/boards/pider/overlay/etc/nftables.conf).
 
 ## Security
-The platform uses a [netfilter-based firewall](pider/boards/pider/overlay/etc/nftables.conf) which blocks all incoming traffic except if destined to the typicall SSH (22) and HTTPS (443) ports. It also does not allow forwarding.
+The platform uses a [netfilter-based firewall](pider/boards/pider/overlay/etc/nftables.conf) which blocks all incoming traffic except if destined to the typical SSH (22) and HTTPS (443) ports. It also does not allow forwarding.
 
 ## Build
 This only builds in Linux-based environments.
@@ -56,6 +53,6 @@ or
 By default, the operating system can be accessed the following ways:
 
 - **UART**: Username is `root`, password is `soup`.
-- **SSH**: Password authentication is not supported due to its inherent security flaws. Instead, to access the device over SSH, add the public key of your machine to the [authorized_keys](pider/boards/pider/overlay/root/.ssh/authorized_keys) file and ssh in as `root`. You can generate a private-public key pair on your machine by executing `ssh-keygen`. Then paste the contents of the generated `.pub` file into the [authorized_keys](pider/boards/pider/overlay/root/.ssh/authorized_keys) file.
+- **SSH**: Password authentication is not supported due to its inherent security flaws. Instead, to access the device over SSH, add the public key of your host machine to the [authorized_keys](pider/boards/pider/overlay/root/.ssh/authorized_keys) file and ssh in as `root`. You can generate a private-public key pair on your machine by executing `ssh-keygen` and then paste the contents of the generated `.pub` file into the [authorized_keys](pider/boards/pider/overlay/root/.ssh/authorized_keys) file.
 
 To connect to a Wi-Fi Access Point, add a file called `wpa_supplicant.conf` to the root filesystem overlay [etc](pider/boards/pider/overlay/etc). For security reasons, this file is not included in this repository and is in the `gitignore`. See [the man page](https://linux.die.net/man/5/wpa_supplicant.conf) to learn what to put into `wpa_supplicant.conf`.
