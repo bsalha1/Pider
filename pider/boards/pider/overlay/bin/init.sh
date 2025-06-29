@@ -14,11 +14,13 @@ setup_network()
     ip addr add 127.0.0.1/8 dev lo
     ip link set lo up
 
-    dhcp_interfaces=eth0
+    has_wireless_interface=false
 
     # If the wpa_supplicant config exists, connected to the Wi-Fi access point.
     if [ -e /etc/wpa_supplicant.conf ]
     then
+        has_wireless_interface=true
+
         # The brcmfmac module (Wi-Fi MAC) takes some time to initialize. Let's wait for the
         # interface to show up.
         while ! grep -q wlan0 /proc/net/dev
@@ -27,12 +29,13 @@ setup_network()
         done
 
         wpa_supplicant -dd -B -D wext -i wlan0 -c /etc/wpa_supplicant.conf
-        dhcp_interfaces="$dhcp_interfaces wlan0"
     fi
 
-    # Get IP address on all DHCP interfaces.
-    if ! dhclient -1 -v -timeout 5 $dhcp_interfaces; then
-
+    # Get IP address via DHCP over Ethernet.
+    dhcp_worked=false
+    if dhclient -1 -v -cf /etc/dhclient.conf eth0; then
+        dhcp_worked=true
+    else
         # If DHCP didn't work, we are probably directly connected to someone's computer. Let's
         # hope they know our static IP address. Let's assign it outside the subnet of most LANs.
         #
@@ -42,7 +45,18 @@ setup_network()
         ip addr flush dev eth0
         ip addr add 172.1.1.2/24 dev eth0
         ip link set eth0 up
+    fi
 
+    # Get IP address via DHCP over Wi-Fi. There's no fallback behavior.
+    if $has_wireless_interface; then
+        if dhclient -1 -v -cf /etc/dhclient.conf wlan0; then
+            dhcp_worked=true
+        fi
+    fi
+
+    # If DHCP didn't work for Ethernet or Wi-Fi, assume we are directly connected to a computer over
+    # Ethernet.
+    if ! $dhcp_worked; then
         # If the computer is connected to a LAN on another one of its ports and has forwarding
         # enabled, we can access the LAN by setting our default route to the computer. Here we
         # assume that the computer assigned the IP address of the network interface facing us to

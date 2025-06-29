@@ -107,7 +107,7 @@ bool init()
     }
 
     /*
-     * In child, execute init.sh.
+     * In child, execute init.sh, writing to syslog pipe.
      */
     if (init_sh_pid == 0)
     {
@@ -164,17 +164,15 @@ bool init()
     }
 
     /*
-     * Read child output from pipe into syslog.
+     * Read child output from pipe into syslog, using the line-buffering of fgets().
      */
-    char buffer[128];
-    ssize_t bytes_read;
-    while ((bytes_read = read(syslog_pipe_fd[0], buffer, sizeof(buffer) - 1)) > 0)
+    char line[256];
+    FILE *syslog_pipe_read_end = fdopen(syslog_pipe_fd[0], "r");
+    while (fgets(line, sizeof(line) - 1, syslog_pipe_read_end))
     {
-        buffer[bytes_read] = '\0';
-        syslog(LOG_INFO, "%s", buffer);
+        syslog(LOG_INFO, "%s", line);
     }
-
-    close(syslog_pipe_fd[0]);
+    fclose(syslog_pipe_read_end);
 
     return true;
 }
