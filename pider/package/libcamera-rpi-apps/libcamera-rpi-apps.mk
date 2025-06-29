@@ -19,7 +19,8 @@ LIBCAMERA_RPI_APPS_DEPENDENCIES = \
 	libexif \
 	libpng \
 	tiff \
-	libdrm
+	libdrm \
+	ffmpeg
 
 LIBCAMERA_RPI_APPS_CONF_OPTS = \
 	-Denable_opencv=disabled \

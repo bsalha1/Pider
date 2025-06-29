@@ -31,7 +31,24 @@ setup_network()
     fi
 
     # Get IP address on all DHCP interfaces.
-    dhclient -v $dhcp_interfaces
+    if ! dhclient -1 -v -timeout 5 $dhcp_interfaces; then
+
+        # If DHCP didn't work, we are probably directly connected to someone's computer. Let's
+        # hope they know our static IP address. Let's assign it outside the subnet of most LANs.
+        #
+        # For the computer, do the following to communicate with us:
+        # ip addr add 172.1.1.1/24 dev <interface>
+        #
+        ip addr flush dev eth0
+        ip addr add 172.1.1.2/24 dev eth0
+        ip link set eth0 up
+
+        # If the computer is connected to a LAN on another one of its ports and has forwarding
+        # enabled, we can access the LAN by setting our default route to the computer. Here we
+        # assume that the computer assigned the IP address of the network interface facing us to
+        # 172.1.1.1.
+        ip route add default via 172.1.1.1
+    fi
 }
 
 setup_ssh_server()
